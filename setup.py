@@ -26,7 +26,7 @@ setup(
     packages=find_packages(),
     install_requires=requirements,
     author='Catboy',
-    description='A description of your package',
+    description='A python implementation of the Lovense API',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/catboy1357/pylove',

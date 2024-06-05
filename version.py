@@ -1,7 +1,10 @@
 "This file holds consent values about the version and what has changed"
-VERSION = "1.0.2"
+VERSION = "1.0.3"
 
 CHANGE_LOG = """
+Version 1.0.3
+
+
 Version 1.0.2
 - Uploaded to pypi and updated relevant details
 
