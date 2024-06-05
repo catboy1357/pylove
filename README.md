@@ -23,7 +23,7 @@ This is a simple Python wrapper library for the **[Lovense Standard Lan API](htt
 You can install the library using pip:
 
 ```bash
-pip install git+https://github.com/catboy1357/pylove
+pip install pylove
 ```
 
 ## Usage
