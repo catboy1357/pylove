@@ -57,6 +57,7 @@ class GameModeWrapper():
     - pattern_request(): Avoids network pressure of multiple function commands
     - pattern_request_raw(): More api accurate version for patterns (advanced)
     - preset_request(): Send one of the pre-made or user created patterns
+    - decode_response(): Make the return value of any command more readable.
 
     ### Attributes
     - app_name: The name of the app
@@ -160,6 +161,12 @@ class GameModeWrapper():
             "X-platform": self.app_name
         }
 
+        # clamp the time value to an accepted a range.
+        time_sec = command_data.get("timeSec")
+        if time_sec is not None and time_sec != 0:
+            clamped_time = max(1, min(time_sec, 6000))
+            command_data.update({'timeSec': clamped_time})
+
         # Log the command data if logging is enabled.
         if self.log:
             print(command_data)
@@ -209,18 +216,8 @@ class GameModeWrapper():
         response_json = self._parse_json(response_json)
 
         # Retrieve and log the response code and message, if logging is enabled
-        response_code = response_json.get("code")
-        if isinstance(response_code, int):
-            error_message = self.error_codes.get(
-                response_code, "Unknown Error"
-            )
-            response_msg = f"Response: {response_code}, {error_message}"
-        else:
-            response_msg = f"Response: Unknown response code {response_code}"
         if self.log:
-            print(response_msg)
-            print(json.dumps(response_json, indent=4))
-            print()
+            print(self.decode_response(response_json))
         return response_json
 
     def _function_clamp_range(
@@ -517,6 +514,42 @@ class GameModeWrapper():
             "command": "GetToyName"
         })
 
+    def decode_response(self, response: Optional[Dict[str, Any]]) -> str:
+        """
+        Decode any commands response from the app into a human readable string
+
+        Args:
+            response (Optional[Dict[str, Any]]): Response returned of a command
+
+        Returns:
+            str: A human readable string
+        """
+        if response is None:
+            return "No response received from the app."
+
+        # parse the response from the server
+        response_type = response.get('type', "Not Response")
+        return_str = f"Response from the app: {response_type}\n"
+
+        # parse the error code and match it to the self.error_codes if it can.
+        code = response.get('code')
+        if isinstance(code, int):
+            error_message = self.error_codes.get(
+                code, "Unknown Error"
+            )
+            code_message = f"{error_message}, {code}"
+        else:
+            code_message = f"Unknown response code {code}"
+        return_str += f"Response from the toy: {code_message}\n"
+
+        # if there is any extra data include it here
+        data = response.get('data')
+        if data is not None:
+            return_str += f"Data: {json.dumps(data, indent=4)}"
+
+        # return the combined response code string.
+        return return_str
+
 
 if __name__ == "__main__":
     love = GameModeWrapper("My Cool App", "10.0.0.69", logging=False)
@@ -540,6 +573,8 @@ if __name__ == "__main__":
 
     # if love.last_command:
     #     love.send_command(love.last_command)
+
+    # print(love.decode_response(love.get_toys()))
 
     input("Press enter to stop")
     love.stop()

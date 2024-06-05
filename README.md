@@ -14,6 +14,7 @@ This is a simple Python wrapper library for the **[Lovense Standard Lan API](htt
 - **function_request()**: Send a single Pattern immediately
 - **pattern_request()**: Avoids network pressure of multiple function commands
 - **stop()**: Sends a stop immediately command
+- **decode_response()**: Make the return value of any command more readable.
 - **pattern_request_raw()**: More api accurate version for patterns (advanced)
 - **send_command()**: Send a JSON command directly to the app (advanced)
 

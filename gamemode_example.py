@@ -59,6 +59,10 @@ if __name__ == "__main__":
     # if love.last_command:
     #     love.send_command(love.last_command)
 
+    # convert the json into a more readable output.
+    # re = love.function_request({love.actions.ALL: 1}, time=1)
+    # print(love.decode_response(re))
+
     # Stops all running commands. This is only required if you don't use the
     # `time` keyword argument. Without the `time` argument, commands run until
     # stopped manually.
